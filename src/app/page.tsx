@@ -1,5 +1,9 @@
+"use client"
+
 import { SetupCard } from "@/components/SetupCard"
 import { Header } from "@/components/Header"
+import { useState } from "react"
+import { ChevronDown } from "lucide-react"
 
 // Mock data para mostrar el feed
 const mockSetups = [
@@ -84,13 +88,40 @@ const mockSetups = [
 ]
 
 export default function Home() {
+  const [sortBy, setSortBy] = useState("recent")
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+
+  const sortOptions = [
+    { value: "recent", label: "Más recientes" },
+    { value: "oldest", label: "Más antiguos" },
+    { value: "relevant", label: "Más relevantes" },
+    { value: "price-high", label: "Precio: Mayor a menor" },
+    { value: "price-low", label: "Precio: Menor a mayor" }
+  ]
+
+  const sortedSetups = [...mockSetups].sort((a, b) => {
+    switch (sortBy) {
+      case "oldest":
+        return parseInt(a.id) - parseInt(b.id)
+      case "relevant":
+        return b.itemCount - a.itemCount
+      case "price-high":
+        return b.totalPrice - a.totalPrice
+      case "price-low":
+        return a.totalPrice - b.totalPrice
+      case "recent":
+      default:
+        return parseInt(b.id) - parseInt(a.id)
+    }
+  })
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
       
       <main className="container mx-auto px-4 py-8">
         {/* Hero Section */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Discover Amazing Setups
           </h1>
@@ -100,9 +131,45 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Pinterest-style Masonry Grid */}
-        <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
-          {mockSetups.map((setup) => (
+        {/* Sort Controls */}
+        <div className="flex justify-between items-center mb-8">
+          <div className="text-sm text-gray-600">
+            {sortedSetups.length} setups encontrados
+          </div>
+          
+          <div className="relative">
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="flex items-center space-x-2 bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+              <span>Ordenar por: {sortOptions.find(opt => opt.value === sortBy)?.label}</span>
+              <ChevronDown className="w-4 h-4" />
+            </button>
+            
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                {sortOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => {
+                      setSortBy(option.value)
+                      setIsDropdownOpen(false)
+                    }}
+                    className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg ${
+                      sortBy === option.value ? 'bg-purple-50 text-purple-700 font-medium' : 'text-gray-700'
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Pinterest-style Masonry Grid - Fixed spacing */}
+        <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6">
+          {sortedSetups.map((setup) => (
             <SetupCard key={setup.id} setup={setup} />
           ))}
         </div>
