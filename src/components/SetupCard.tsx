@@ -21,7 +21,7 @@ interface SetupCardProps {
 
 export function SetupCard({ setup }: SetupCardProps) {
   return (
-    <div className="break-inside-avoid mb-6 bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden group cursor-pointer inline-block w-full">
+    <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden group cursor-pointer w-full h-fit">
       {/* Image Container */}
       <div className="relative overflow-hidden">
         <Image
