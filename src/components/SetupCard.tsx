@@ -24,9 +24,11 @@ export function SetupCard({ setup }: SetupCardProps) {
     <div className="break-inside-avoid mb-6 bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden group cursor-pointer inline-block w-full">
       {/* Image Container */}
       <div className="relative overflow-hidden">
-        <img
+        <Image
           src={setup.imageUrl}
           alt={setup.title}
+          width={400}
+          height={300}
           className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
         />
         
@@ -58,9 +60,11 @@ export function SetupCard({ setup }: SetupCardProps) {
       <div className="p-4">
         {/* Creator Info */}
         <div className="flex items-center space-x-3 mb-3">
-          <img
+          <Image
             src={setup.creator.avatar}
             alt={setup.creator.name}
+            width={32}
+            height={32}
             className="w-8 h-8 rounded-full object-cover"
           />
           <span className="text-sm font-medium text-gray-700">{setup.creator.name}</span>
@@ -95,7 +99,7 @@ export function SetupCard({ setup }: SetupCardProps) {
         <div className="flex items-center justify-between text-sm">
           <span className="text-gray-600">{setup.itemCount} items</span>
           <span className="font-semibold text-purple-600">
-            ${setup.totalPrice.toLocaleString()}
+            ${setup.totalPrice.toLocaleString('en-US')}
           </span>
         </div>
       </div>
