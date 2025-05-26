@@ -119,7 +119,7 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
@@ -167,8 +167,8 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Pinterest-style Masonry Grid - Fixed spacing */}
-        <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6">
+        {/* Pinterest-style Masonry Grid - Optimized for better space usage */}
+        <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 2xl:columns-6 gap-4 md:gap-6">
           {sortedSetups.map((setup) => (
             <SetupCard key={setup.id} setup={setup} />
           ))}
