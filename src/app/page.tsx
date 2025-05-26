@@ -167,8 +167,15 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Pinterest-style Masonry Grid - CSS Grid approach for better control */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 md:gap-6 auto-rows-max">
+        {/* Pinterest-style Masonry Grid - Force more columns on large screens */}
+        <div 
+          className="gap-4 md:gap-6"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+            gridAutoRows: 'max-content'
+          }}
+        >
           {sortedSetups.map((setup) => (
             <SetupCard key={setup.id} setup={setup} />
           ))}
