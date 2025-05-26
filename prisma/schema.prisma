@@ -1,0 +1,107 @@
+// Setupify.io Database Schema
+// Visual platform for gamer and developer setups
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model for creators (invitation-only)
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String   @unique
+  name      String?
+  bio       String?
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  setups          Setup[]
+  invitationUsed  String?     @unique
+  usedInvitation  Invitation? @relation("InvitedUser", fields: [invitationUsed], references: [id])
+  sentInvitations Invitation[] @relation("InviterUser")
+
+  @@map("users")
+}
+
+// Invitation system for creators
+model Invitation {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  email     String?
+  used      Boolean  @default(false)
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+  expiresAt DateTime?
+
+  // Relations
+  inviterId   String
+  inviter     User  @relation("InviterUser", fields: [inviterId], references: [id])
+  invitedUser User? @relation("InvitedUser")
+
+  @@map("invitations")
+}
+
+// Setup posts
+model Setup {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  images      String[] // Array of image URLs
+  published   Boolean  @default(false)
+  featured    Boolean  @default(false)
+  views       Int      @default(0)
+  likes       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  items    SetupItem[]
+  tags     SetupTag[]
+
+  @@map("setups")
+}
+
+// Tagged items in setups
+model SetupItem {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  affiliateUrl String
+  price       String?
+  brand       String?
+  category    String?
+  
+  // Position on image (coordinates)
+  imageIndex  Int     // Which image in the setup
+  positionX   Float   // X coordinate (percentage)
+  positionY   Float   // Y coordinate (percentage)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  setupId String
+  setup   Setup  @relation(fields: [setupId], references: [id], onDelete: Cascade)
+
+  @@map("setup_items")
+}
+
+// Tags for setups (for search and categorization)
+model SetupTag {
+  id   String @id @default(cuid())
+  name String @unique
+
+  // Relations
+  setups Setup[]
+
+  @@map("setup_tags")
+}
