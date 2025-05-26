@@ -95,7 +95,7 @@ export function SetupCard({ setup }: SetupCardProps) {
         <div className="flex items-center justify-between text-sm">
           <span className="text-gray-600">{setup.itemCount} items</span>
           <span className="font-semibold text-purple-600">
-            ${setup.totalPrice.toLocaleString()}
+            ${setup.totalPrice.toLocaleString('en-US')}
           </span>
         </div>
       </div>
